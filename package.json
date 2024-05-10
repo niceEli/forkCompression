@@ -1,6 +1,6 @@
 {
   "name": "forkcompression",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Kinda Like gZip But Better",
   "type": "module",
   "main": "index.js",
