@@ -1,15 +1,12 @@
 import fs from "node:fs";
-import brotli from "brotli";
+// import brotli from "brotli";
 import { encrypt } from "node-encryption";
 
-import { muint8 } from "gomooe";
-const { UInt8E } = muint8;
+import gradule from "gradule";
 
-function verify(s1 = '', s2 = '') {
-  let res = true;
-  for (let i = 0; i < s1.length; i++) if (s1[i] !== s2[i]) res = false;
-  return res;
-}
+import { muint8 } from "gomooe";
+import { verify } from "./verify.js";
+const { UInt8E } = muint8;
 
 /**
  * @param {string} file
@@ -19,25 +16,24 @@ function verify(s1 = '', s2 = '') {
  */
 export default function compress(file, encoder, fileData, password) {
   let finalFile = file + ".fc";
-  
-  console.log(`${file} -> ${finalFile}`);
-  
+
+  const cPr = (x) => gradule.preset.retro.print(x.toString());
+
+  cPr(`${file} -> ${finalFile}`);
+
   let encodedFile = encoder.encode(fileData, -1);
   let encodedStr = UInt8E.decodeUint8(encodedFile);
-  let brEncode = brotli.compress(encodedStr);
+  let brEncode = /* brotli.compress */(encodedStr);
 
-  let decodedLayer = UInt8E.encodeUint8(encodedStr);
-  let decodedFile = encoder.decode(decodedLayer);
-  console.log(
-    verify(decodedFile, fileData),
-    verify(decodedLayer, encodedFile)
-  )
+  {
+    // @ Verification
+    let decodedLayer = UInt8E.encodeUint8(encodedStr);
 
-  console.log(decodedFile, fileData)
+    let verifyResults = [verify(decodedLayer, encodedFile)];
 
-  console.log(brEncode);
-  console.log(typeof brEncode);
-  
+    cPr(`Verified: ${verifyResults.join(" | ")}`);
+  }
+
   let data = brEncode;
   if (password !== undefined) data = encrypt(data, password);
 
@@ -47,10 +43,10 @@ export default function compress(file, encoder, fileData, password) {
   //   lastName = `${file} (${dupeId}).fc`;
   //   dupeId++;
   // }
-  
+
   fs.writeFile(lastName, data, (err) => {
     if (err) throw err;
   });
-  
-  console.log("Done!");
+
+  cPr("Done!");
 }
