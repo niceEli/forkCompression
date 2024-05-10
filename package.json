@@ -8,7 +8,7 @@
     "forc": "index.js"
   },
   "scripts": {
-    "test": "node index.js README.md && node index.js README.md.fc"
+    "test": "node index.js README.md -p hey -r && node index.js README.md.fc"
   },
   "author": "niceEli & SpecFORK",
   "license": "MIT",

@@ -21,8 +21,16 @@ const removeLastExt = (f = "") => {
  * @param {muint8.MUint8} encoder
  * @param {*} fileData
  * @param {string} password
+ *
+ * @param {boolean} replaceFile
  */
-export default function deCompress(file, encoder, fileData, password) {
+export default function deCompress(
+  file,
+  encoder,
+  fileData,
+  password,
+  replaceFile,
+) {
   let finalFile = removeLastExt(file).filename;
 
   const cPr = (x) => gradule.preset.wedding_day_blues.print(x.toString());
@@ -46,12 +54,15 @@ export default function deCompress(file, encoder, fileData, password) {
   }
 
   let lastName = finalFile;
-  // let dupeId = 1;
-  // let { filename, ext } = removeLastExt(finalFile);
-  // while (fs.existsSync(lastName)) {
-  //   lastName = `${filename} (${dupeId}).${ext}`;
-  //   dupeId++;
-  // }
+  // Make duplicates
+  if (!replaceFile) {
+    let dupeId = 1;
+    let { filename, ext } = removeLastExt(finalFile);
+    while (fs.existsSync(lastName)) {
+      lastName = `${filename} (${dupeId}).${ext}`;
+      dupeId++;
+    }
+  }
 
   fs.writeFile(lastName, unEncodedFile, (err) => {
     if (err) throw err;
