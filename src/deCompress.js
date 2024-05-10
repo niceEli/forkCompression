@@ -8,10 +8,7 @@ export default function deCompress(file, encoder, fileData, password) {
   if (password != undefined) {
     data = Buffer.from(decrypt(data.toString(), password));
   }
-  console.log(data.toString());
-  console.log(typeof data);
-  let brDecode = brotli.decompress(fileData);
-  let unEncodedFile = encoder.decode(brDecode);
+  let unEncodedFile = encoder.decode(data);
   fs.writeFile(finalFile, unEncodedFile, (err) => {
     if (err) throw err;
   });
