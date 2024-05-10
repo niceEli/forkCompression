@@ -3,6 +3,7 @@ import brotli from "brotli";
 import { encrypt, decrypt } from "node-encryption";
 export default function compress(file, encoder, fileData, password) {
   let finalFile = file + ".fc";
+  console.log(`${file} -> ${finalFile}`);
   let data = fileData;
   if (password !== undefined) {
     data = encrypt(data, password);
@@ -12,4 +13,5 @@ export default function compress(file, encoder, fileData, password) {
   fs.writeFile(finalFile, brEncode, (err) => {
     if (err) throw err;
   });
+  console.log("Done!");
 }

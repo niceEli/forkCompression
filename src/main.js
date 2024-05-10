@@ -9,7 +9,6 @@ export default async function main() {
   let encoder = new eobj.MUint8Encoder();
   const file = process.argv[2];
   const password = process.argv[3];
-  console.log(file);
   if (file == undefined) {
     console.log("Usage: forc <file> [password]");
     process.exit(1);
