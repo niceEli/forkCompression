@@ -1,0 +1,20 @@
+{
+  "name": "forkcompression",
+  "version": "1.0.0",
+  "description": "Kinda Like gZip But Better",
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "forc": "index.js"
+  },
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "niceEli & SpecFORK",
+  "license": "MIT",
+  "dependencies": {
+    "brotli": "^1.3.3",
+    "gomooe": "^1.0.2",
+    "node-encryption": "^2.0.1"
+  }
+}
