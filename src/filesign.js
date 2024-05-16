@@ -41,14 +41,14 @@ class FileSignFlags {
   }
 }
 
-void (function Test() {
-  let fsf = new FileSignFlags();
-  fsf.password = true;
-  fsf.base = true;
-  fsf.bullpress = true;
+// (() => {
+//   let fsf = new FileSignFlags();
+//   fsf.password = true;
+//   fsf.base = true;
+//   fsf.bullpress = true;
 
-  console.log(fsf.bundle());
-})();
+//   console.log(fsf.bundle());
+// })();
 
 export default {
   FileSignFlags,

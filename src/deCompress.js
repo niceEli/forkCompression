@@ -1,48 +1,18 @@
 import gradule from "gradule";
 // import brotli from "brotli";
 
-import fs, { fdatasync } from "node:fs";
+import { fdatasync } from "node:fs";
 
-import { decrypt } from "node-encryption";
 import { muint8 } from "gomooe";
+import { decrypt } from "node-encryption";
+const { UInt8E } = muint8;
+
+import { logVerification } from "./logVerification.js";
+import { makeDecompressedFile } from "./makeDecompressedFile.js";
+import { removeLastExt } from "./removeLastExt.js";
 import { verify } from "./verify.js";
 
-const { UInt8E } = muint8;
 const cPr = (x) => gradule.preset.wedding_day_blues.print(x.toString());
-
-const removeLastExt = (f = "") => {
-  const lastIndex = f.lastIndexOf(".");
-  return {
-    filename: f.slice(0, lastIndex),
-    ext: f.slice(lastIndex + 1),
-  };
-};
-
-function logVerification(unEncodedStr, cPr) {
-  {
-    let decodedLayer = UInt8E.decodeUint8(unEncodedStr);
-    let verifyResults = [verify(decodedLayer, unEncodedStr)];
-
-    cPr(`Verified: ${verifyResults.join(" | ")}`);
-  }
-}
-
-function makeDecompressedFile(finalFile, replaceFile, unEncodedFile) {
-  let lastName = finalFile;
-  // Make duplicates
-  if (!replaceFile) {
-    let dupeId = 1;
-    let { filename, ext } = removeLastExt(finalFile);
-    while (fs.existsSync(lastName)) {
-      lastName = `${filename} (${dupeId}).${ext}`;
-      dupeId++;
-    }
-  }
-
-  fs.writeFile(lastName, unEncodedFile, (err) => {
-    if (err) throw err;
-  });
-}
 
 /**
  * @param {string} file

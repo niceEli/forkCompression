@@ -1,38 +1,17 @@
-import fs from "node:fs";
 // import brotli from "brotli";
 import { encrypt } from "node-encryption";
 
 import gradule from "gradule";
 
 import { muint8 } from "gomooe";
-import { verify } from "./verify.js";
 const { UInt8E } = muint8;
 
-const cPr = (x) => gradule.preset.retro.print(x.toString());
+import { logVerification } from "./logVerification.js";
+import { makeCompressedFile } from "./makeCompressedFile.js";
 
-function logVerification(encodedStr, encodedFile) {
-  let decodedLayer = UInt8E.encodeUint8(encodedStr);
-  let verifyResults = [verify(decodedLayer, encodedFile)];
+export const cPr = (x) => gradule.preset.retro.print(x.toString());
 
-  cPr(`>  Verified: ${verifyResults.join(" | ")}`);
-}
-
-function makeCompressedFile(finalFile, replaceFile, file, data) {
-  let lastName = finalFile;
-  let ext = 'fc'
-
-  // Make duplicates
-  let dupeId = 1;
-  if (!replaceFile)
-    while (fs.existsSync(lastName)) {
-      lastName = `${file} (${dupeId}).${ext}`;
-      dupeId++;
-    }
-
-  fs.writeFile(lastName, data, (err) => {
-    if (err) throw err;
-  });
-}
+const EXTENSION = "fc";
 
 /**
  * @param {string} file
@@ -49,9 +28,7 @@ export default function compress(
   password,
   replaceFile,
 ) {
-  let finalFile = file + ".fc";
-
-  cPr(`>  ${file} -> ${finalFile}`);
+  cPr(`>  ${file} -> ${file}.${EXTENSION}`);
 
   let encodedFile = encoder.encode(fileData, -1);
   let encodedStr = UInt8E.decodeUint8(encodedFile);
@@ -62,7 +39,7 @@ export default function compress(
   let data = brEncode;
   if (password !== undefined) data = encrypt(data, password);
 
-  makeCompressedFile(finalFile, replaceFile, file, data);
+  makeCompressedFile(file, replaceFile, data, EXTENSION);
 
   cPr(">  Done!");
 }

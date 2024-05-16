@@ -2,6 +2,7 @@ import fs from "node:fs";
 
 import compress from "./compress.js";
 import deCompress from "./deCompress.js";
+
 import gradule from "gradule";
 import filesign from "./filesign.js";
 
@@ -22,7 +23,7 @@ function printJobText(file, password, replaceFile) {
   [
     `Starting ForkC Job for`,
     `\\__  ${file}`,
-    `\\__  Password?:       ${password}`,
+    `\\__  Password?:       ${password || '""'}`,
     `\\__  Replace Files?:  ${replaceFile}`,
     "",
   ].forEach((x) => gradule.preset.wiretap.print(x));
