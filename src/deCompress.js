@@ -1,29 +1,42 @@
-import fs, { fdatasync } from "node:fs";
-import brotli from "brotli";
-import { decrypt } from "node-encryption";
+import { fdatasync } from "node:fs";
+// import brotli from "brotli";
+
+import gradule from "gradule";
 
 import { muint8 } from "gomooe";
+import { decrypt } from "node-encryption";
 const { UInt8E } = muint8;
 
-const removeLastExt = (f = "") => {
-  const lastIndex = f.lastIndexOf(".");
-  return {
-    filename: f.slice(0, lastIndex),
-    ext: f.slice(lastIndex + 1),
-  };
-};
+import { logVerification } from "./logVerification.js";
+import { makeDecompressedFile } from "./makeDecompressedFile.js";
+import { removeLastExt } from "./removeLastExt.js";
+import { verify } from "./verify.js";
+
+import fileSign from "./filesign.js";
+
+const cPr = (x) => gradule.preset.wedding_day_blues.print(x.toString());
 
 /**
  * @param {string} file
  * @param {muint8.MUint8} encoder
  * @param {*} fileData
  * @param {string} password
+ *
+ * @param {boolean} replaceFile
  */
-export default function deCompress(file, encoder, fileData, password) {
+export default function deCompress(
+  file,
+  encoder,
+  fileData,
+  password,
+  replaceFile,
+) {
   let finalFile = removeLastExt(file).filename;
 
-  console.log(`${file} -> ${finalFile}`);
+  cPr(`${file} -> ${finalFile}`);
 
+  let unsignedFile = fileSign.unsignText(fileData);
+  
   let data = fileData;
   if (password !== undefined)
     data = Buffer.from(decrypt(data.toString(), password));
@@ -32,21 +45,14 @@ export default function deCompress(file, encoder, fileData, password) {
     console.log(data.toString());
     console.log(typeof data);
   }
-  let brDecode = brotli.decompress(data);
+  
+  let brDecode = /* brotli.decompress */ data;
   let unEncodedStr = UInt8E.encodeUint8(brDecode);
   let unEncodedFile = encoder.decode(unEncodedStr);
+  
+  logVerification(unEncodedStr, cPr);
 
-  let lastName = finalFile;
-  // let dupeId = 1;
-  // let { filename, ext } = removeLastExt(finalFile);
-  // while (fs.existsSync(lastName)) {
-  //   lastName = `${filename} (${dupeId}).${ext}`;
-  //   dupeId++;
-  // }
+  makeDecompressedFile(finalFile, replaceFile, unEncodedFile);
 
-  fs.writeFile(lastName, unEncodedFile, (err) => {
-    if (err) throw err;
-  });
-
-  console.log("Done!");
+  cPr("Done!");
 }

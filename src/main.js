@@ -1,31 +1,78 @@
-import { muint8 } from "gomooe";
-
 import fs from "node:fs";
 
 import compress from "./compress.js";
 import deCompress from "./deCompress.js";
 
-export default async function main() {
-  const encoder = new muint8.MUint8Encoder();
+import BPcompress from "./BPcompress.js";
+import BPdeCompress from "./BPdeCompress.js";
 
-  if (process.env.debug)
-    console.log(
-      "Debug mode enabled!!!\nExpect Console To Be Flushed!\nGet Ready For Tons Of Logs!"
-    );
+import gradule from "gradule";
 
-  const file = process.argv[2];
-  const password = process.argv[3];
+import { muint8 } from "gomooe";
+
+const getArgSet = (x) => {
+  var pos = 0,
+    key = "";
+  while (key !== x) {
+    key = process.argv[pos];
+    pos++;
+    if (key === undefined) return;
+  }
+  return process.argv[pos];
+};
+
+function printJobText(file, password, replaceFile) {
+  [
+    `Starting ForkC Job for`,
+    `\\__  ${file}`,
+    `\\__  Password?:       ${password || '""'}`,
+    `\\__  Replace Files?:  ${replaceFile}`,
+    "",
+  ].forEach((x) => gradule.preset.wiretap.print(x));
+}
+
+function doJob(file, encoder, password, replaceFile, bullpressMode) {
+  printJobText(file, password, replaceFile);
 
   if (file == undefined) {
-    console.log("Usage: forc <file> [password]");
+    gradule.preset.cherryblossoms.print("Usage: forc <file> <[args]>");
     process.exit(1);
   }
 
   fs.readFile(process.cwd() + "/" + file, (err, data) => {
     if (err) throw err;
+    else if (!data) return;
 
-    if (data)
-      if (file.endsWith(".fc")) deCompress(file, encoder, data, password);
-      else compress(file, encoder, data, password);
+    let compressed = file.endsWith(".fc");
+
+    /** @type {[typeof BPcompress, typeof BPdeCompress] | [typeof compress, typeof deCompress]}*/
+    let cbSet = !bullpressMode
+      ? [compress, deCompress]
+      : [BPcompress, BPdeCompress];
+
+    /** @type {typeof BPcompress | typeof compress | typeof BPdeCompress | typeof deCompress} */
+    let cb = !compressed ? cbSet[0] : cbSet[1];
+
+    cb(file, encoder, data, password, replaceFile);
   });
+}
+
+export default async function main() {
+  const findInArgs = (ruleCB) => !!process.argv.find(ruleCB);
+
+  const encoder = new muint8.MUint8Encoder();
+
+  if (process.env.debug)
+    console.log(
+      "Debug mode enabled!!!\nExpect Console To Be Flushed!\nGet Ready For Tons Of Logs!",
+    );
+
+  const file = process.argv[2];
+  const password = getArgSet("-p") || getArgSet("--password");
+  const replaceFile = findInArgs((x) => x === "-r" || x === "--replace");
+  const bullpressMode = findInArgs(
+    (x) => x === "-b" || x === "--bullpress" || x === "-bp",
+  );
+
+  doJob(file, encoder, password, replaceFile, bullpressMode);
 }

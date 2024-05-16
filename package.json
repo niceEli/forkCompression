@@ -1,6 +1,6 @@
 {
   "name": "forkcompression",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Kinda Like gZip But Better",
   "type": "module",
   "main": "index.js",
@@ -8,7 +8,9 @@
     "forc": "index.js"
   },
   "scripts": {
-    "test": "node index.js"
+    "untest": " node index.js README.md.fc -r",
+    "test": "node index.js README.md -r",
+    "testdot": "node index.js"
   },
   "author": "niceEli & SpecFORK",
   "license": "MIT",
@@ -16,6 +18,7 @@
     "brotli": "^1.3.3",
     "dotenv": "^16.4.5",
     "gomooe": "^1.0.2",
+    "gradule": "^1.0.2",
     "node-encryption": "^2.0.1"
   }
 }
