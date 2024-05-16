@@ -1,5 +1,7 @@
+import gradule from "gradule";
+
 import { verify } from "./verify.js";
-import { cPr } from "./compress.js";
+const cPr = (x) => gradule.preset.retro.print(x.toString());
 
 import { muint8 } from "gomooe";
 const { UInt8E } = muint8;

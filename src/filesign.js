@@ -17,7 +17,7 @@ class FileSignFlags {
    * @SET new this
    * @type {boolean}
    */
-  bullpress = false; // This is a maybe
+  bullpress = false;
 
   /** Bundle flags for validation
    * @returns {{ hexVal: string, out: boolean[], val: boolean | Error }}
@@ -32,6 +32,10 @@ class FileSignFlags {
     );
   }
 
+  getArr() {
+    return [this.password, this.base, this.bullpress];
+  }
+
   /** Unpack and decode flags from hex string
    * @param {string} flagHex - Hex string containing encoded flags
    * @returns {boolean[]} - Decoded flags
@@ -39,17 +43,35 @@ class FileSignFlags {
   unpack(flagHex) {
     return enc.unsignHexCharSig(flagHex);
   }
+
+  constructor(password, compression) {
+    this.password = password;
+    this.base = !!compression;
+    this.bullpress = !compression;
+  }
 }
 
-// (() => {
-//   let fsf = new FileSignFlags();
-//   fsf.password = true;
-//   fsf.base = true;
-//   fsf.bullpress = true;
+const delim = "<|:";
+function signToText(txt, password, compression) {
+  let flags = new FileSignFlags(password, compression);
+  let { hexVal, out, val } = flags.bundle();
+  if (val instanceof Error) return val;
+  return `${txt}${delim}${hexVal}`;
+}
 
-//   console.log(fsf.bundle());
-// })();
+function unsignText(txt = "") {
+  let [text, hexVal] = txt.lastIndexOf(delim) > -1 ? txt.split(delim) : [txt];
+  let fsf = new FileSignFlags();
+  
+  /** @type {ReturnType<typeof fsf.getArr()> | undefined} */
+  let flags;
+  if (hexVal) flags = fsf.unpack(hexVal);
+  
+  return { text, flags };
+}
 
 export default {
   FileSignFlags,
+  signToText,
+  unsignText,
 };

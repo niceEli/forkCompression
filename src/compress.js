@@ -10,7 +10,9 @@ import { logVerification } from "./logVerification.js";
 import { makeCompressedFile } from "./makeCompressedFile.js";
 import { verify } from "./verify.js";
 
-export const cPr = (x) => gradule.preset.retro.print(x.toString());
+import fileSign from "./filesign.js";
+
+const cPr = (x) => gradule.preset.retro.print(x.toString());
 
 const EXTENSION = "fc";
 
@@ -39,7 +41,7 @@ export default function compress(
     let decodedFile = encoder.decode(decodedLayer);
 
     logVerification(encodedStr, encodedFile);
-    logVerification(decodedFile, fileData)
+    logVerification(decodedFile, fileData);
 
     console.log(brEncode);
     console.log(typeof brEncode);
@@ -47,8 +49,10 @@ export default function compress(
 
   let data = brEncode;
   if (password !== undefined) data = encrypt(data, password);
+  
+  let signedFile = fileSign.signToText(data, !!password, false);
 
-  makeCompressedFile(file, replaceFile, data, EXTENSION);
+  makeCompressedFile(file, replaceFile, signedFile, EXTENSION);
 
   cPr(">  Done!");
 }

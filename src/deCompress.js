@@ -1,7 +1,7 @@
-import gradule from "gradule";
+import { fdatasync } from "node:fs";
 // import brotli from "brotli";
 
-import { fdatasync } from "node:fs";
+import gradule from "gradule";
 
 import { muint8 } from "gomooe";
 import { decrypt } from "node-encryption";
@@ -11,6 +11,8 @@ import { logVerification } from "./logVerification.js";
 import { makeDecompressedFile } from "./makeDecompressedFile.js";
 import { removeLastExt } from "./removeLastExt.js";
 import { verify } from "./verify.js";
+
+import fileSign from "./filesign.js";
 
 const cPr = (x) => gradule.preset.wedding_day_blues.print(x.toString());
 
@@ -33,6 +35,8 @@ export default function deCompress(
 
   cPr(`${file} -> ${finalFile}`);
 
+  let unsignedFile = fileSign.unsignText(fileData);
+  
   let data = fileData;
   if (password !== undefined)
     data = Buffer.from(decrypt(data.toString(), password));

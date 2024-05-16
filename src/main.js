@@ -3,8 +3,10 @@ import fs from "node:fs";
 import compress from "./compress.js";
 import deCompress from "./deCompress.js";
 
+import BPcompress from "./BPcompress.js";
+import BPdeCompress from "./BPdeCompress.js";
+
 import gradule from "gradule";
-import filesign from "./filesign.js";
 
 import { muint8 } from "gomooe";
 
@@ -29,7 +31,7 @@ function printJobText(file, password, replaceFile) {
   ].forEach((x) => gradule.preset.wiretap.print(x));
 }
 
-function doJob(file, encoder, password, replaceFile) {
+function doJob(file, encoder, password, replaceFile, bullpressMode) {
   printJobText(file, password, replaceFile);
 
   if (file == undefined) {
@@ -41,13 +43,23 @@ function doJob(file, encoder, password, replaceFile) {
     if (err) throw err;
     else if (!data) return;
 
-    if (file.endsWith(".fc"))
-      deCompress(file, encoder, data, password, replaceFile);
-    else compress(file, encoder, data, password, replaceFile);
+    let compressed = file.endsWith(".fc");
+
+    /** @type {[typeof BPcompress, typeof BPdeCompress] | [typeof compress, typeof deCompress]}*/
+    let cbSet = !bullpressMode
+      ? [compress, deCompress]
+      : [BPcompress, BPdeCompress];
+
+    /** @type {typeof BPcompress | typeof compress | typeof BPdeCompress | typeof deCompress} */
+    let cb = !compressed ? cbSet[0] : cbSet[1];
+
+    cb(file, encoder, data, password, replaceFile);
   });
 }
 
 export default async function main() {
+  const findInArgs = (ruleCB) => !!process.argv.find(ruleCB);
+
   const encoder = new muint8.MUint8Encoder();
 
   if (process.env.debug)
@@ -57,11 +69,10 @@ export default async function main() {
 
   const file = process.argv[2];
   const password = getArgSet("-p") || getArgSet("--password");
+  const replaceFile = findInArgs((x) => x === "-r" || x === "--replace");
+  const bullpressMode = findInArgs(
+    (x) => x === "-b" || x === "--bullpress" || x === "-bp",
+  );
 
-  const replaceFile = !!process.argv.find((x) => {
-    if (x === "-r" || x === "--replace") return true;
-    else return false;
-  });
-
-  doJob(file, encoder, password, replaceFile);
+  doJob(file, encoder, password, replaceFile, bullpressMode);
 }
