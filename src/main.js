@@ -50,6 +50,11 @@ function doJob(file, encoder, password, replaceFile) {
 export default async function main() {
   const encoder = new muint8.MUint8Encoder();
 
+  if (process.env.debug)
+    console.log(
+      "Debug mode enabled!!!\nExpect Console To Be Flushed!\nGet Ready For Tons Of Logs!",
+    );
+
   const file = process.argv[2];
   const password = getArgSet("-p") || getArgSet("--password");
 

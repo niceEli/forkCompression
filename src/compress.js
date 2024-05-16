@@ -8,6 +8,7 @@ const { UInt8E } = muint8;
 
 import { logVerification } from "./logVerification.js";
 import { makeCompressedFile } from "./makeCompressedFile.js";
+import { verify } from "./verify.js";
 
 export const cPr = (x) => gradule.preset.retro.print(x.toString());
 
@@ -34,7 +35,15 @@ export default function compress(
   let encodedStr = UInt8E.decodeUint8(encodedFile);
   let brEncode = /* brotli.compress */ encodedStr;
 
-  logVerification(encodedStr, encodedFile);
+  if (process.env.debug) {
+    let decodedFile = encoder.decode(decodedLayer);
+
+    logVerification(encodedStr, encodedFile);
+    logVerification(decodedFile, fileData)
+
+    console.log(brEncode);
+    console.log(typeof brEncode);
+  }
 
   let data = brEncode;
   if (password !== undefined) data = encrypt(data, password);
