@@ -13,10 +13,15 @@ function getGMversion(gmChoice) {
 }
 
 export function makeGMClient() {
-  let gmChoice = [
-    findInArgs((x) => x === "-gm1" || x === "--gomooe1"),
-    findInArgs((x) => x === "-gm2" || x === "--gomooe2"),
-  ];
-
-  return getGMversion(gmChoice);
+  try {
+    let gmChoice = [
+      findInArgs((x) => x === "-gm1" || x === "--gomooe1"),
+      findInArgs((x) => x === "-gm2" || x === "--gomooe2"),
+    ];
+  
+    return getGMversion(gmChoice);
+  } catch (err) {
+    // This means we're probably running in a browser
+    return GoMooE1;
+  }
 }

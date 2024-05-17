@@ -8,7 +8,6 @@ const { UInt8E } = muint8;
 
 import { logVerification } from "./logVerification.js";
 import { makeCompressedFile } from "./makeCompressedFile.js";
-import { verify } from "./verify.js";
 
 import fileSign from "./filesign.js";
 

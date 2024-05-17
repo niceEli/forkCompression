@@ -4,24 +4,15 @@ import gradule from "gradule";
 
 import { muint8 } from "gomooe";
 import { decrypt } from "node-encryption";
-const { UInt8E } = muint8;
 
 import { logVerification } from "./logVerification.js";
 import { makeDecompressedFile } from "./makeDecompressedFile.js";
+import { processDecoding } from "./processEncoding.js";
 import { removeLastExt } from "./removeLastExt.js";
-import { verify } from "./verify.js";
-
-import { makeGMClient } from "./makeGMClient.js";
 
 import fileSign from "./filesign.js";
 
 const cPr = (x) => gradule.preset.wedding_day_blues.print(x.toString());
-
-function processEncoding(gmClient, data, encoder) {
-  let bpDecode = gmClient.decode(data, process.env.debug).decodedString;
-  let brDecode = encoder.decode(UInt8E.encodeUint8(bpDecode));
-  return { bpDecode, brDecode };
-}
 
 /**
  * @param {string} file
@@ -42,8 +33,6 @@ export default function deCompress(
 
   cPr(`${file} -> ${finalFile}`);
 
-  let gmClient = makeGMClient();
-
   let unsignedFile = fileSign.unsignText(fileData.toString());
   console.log(unsignedFile.flags);
 
@@ -62,7 +51,7 @@ export default function deCompress(
     console.log(typeof data);
   }
 
-  let { bpDecode, brDecode } = processEncoding(gmClient, data, encoder);
+  let { gmClient, bpDecode, brDecode } = processDecoding(encoder, data);
 
   logVerification(bpDecode, cPr);
 

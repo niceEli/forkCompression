@@ -3,31 +3,21 @@ import { encrypt } from "node-encryption";
 import gradule from "gradule";
 
 import { muint8 } from "gomooe";
-const { UInt8E } = muint8;
 
 import { logVerification } from "./logVerification.js";
 import { makeCompressedFile } from "./makeCompressedFile.js";
-import { verify } from "./verify.js";
+
+import { processEncoding } from "./processEncoding.js";
 
 import fileSign from "./filesign.js";
-import { makeGMClient } from "./makeGMClient.js";
 
 const cPr = (x) => gradule.preset.retro.print(x.toString());
 
 const EXTENSION = "fc";
 
-function processEncodings(encoder, fileData) {
-  let gmClient = makeGMClient();
-
-  let encodedStr = UInt8E.decodeUint8(encoder.encode(fileData));
-  let bpEncode = gmClient.encode(encodedStr, process.env.debug);
-  let brEncode = bpEncode.encodedString;
-  return { encodedStr, bpEncode, brEncode };
-}
-
 /**
  * @param {string} file
- * @param {muint8.MUint8} encoder
+ * @param {typeof muint8.MUint8} encoder
  * @param {*} fileData
  * @param {string} password
  *
@@ -42,7 +32,7 @@ export default function BPcompress(
 ) {
   cPr(`>  ${file} -> ${file}.${EXTENSION}`);
 
-  let { encodedStr, bpEncode, brEncode } = processEncodings(encoder, fileData);
+  let { encodedStr, bpEncode, brEncode } = processEncoding(encoder, fileData);
 
   if (process.env.debug) {
     let decodedFile = encoder.decode(decodedLayer);
