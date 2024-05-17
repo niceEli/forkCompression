@@ -55,7 +55,8 @@ export default function deCompress(
 
   logVerification(unEncodedStr, cPr);
 
-  makeDecompressedFile(finalFile, replaceFile, unEncodedFile);
-
-  cPr("Done!");
+  makeDecompressedFile(finalFile, replaceFile, unEncodedFile).then(() => {
+    cPr("Done!");
+    process.exit(0);
+  });
 }

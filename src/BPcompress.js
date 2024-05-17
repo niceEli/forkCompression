@@ -54,4 +54,5 @@ export default function BPcompress(
   makeCompressedFile(file, replaceFile, signedFile, EXTENSION);
 
   cPr(">  Done!");
+  process.exit(0);
 }

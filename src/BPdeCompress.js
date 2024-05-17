@@ -59,7 +59,8 @@ export default function BPdeCompress(
 
   logVerification(bpDecode, cPr);
 
-  makeDecompressedFile(finalFile, replaceFile, brDecode);
-
-  cPr("Done!");
+  makeDecompressedFile(finalFile, replaceFile, brDecode).then(() => {
+    cPr("Done!");
+    process.exit(0);
+  });
 }

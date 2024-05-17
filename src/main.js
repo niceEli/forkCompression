@@ -46,7 +46,7 @@ function doJob(file, encoder, password, replaceFile, bullpressMode) {
 
     cb(file, encoder, data, password, replaceFile);
 
-    process.exit(0);
+    // process.exit(0);
   });
 }
 

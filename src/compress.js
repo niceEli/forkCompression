@@ -48,10 +48,11 @@ export default function compress(
 
   let data = brEncode;
   if (password !== undefined) data = encrypt(data, password);
-  
+
   let signedFile = fileSign.signToText(data, !!password, false);
 
-  makeCompressedFile(file, replaceFile, signedFile, EXTENSION);
-
-  cPr(">  Done!");
+  makeCompressedFile(file, replaceFile, signedFile, EXTENSION).then(() => {
+    cPr("Done!");
+    process.exit(0);
+  });
 }

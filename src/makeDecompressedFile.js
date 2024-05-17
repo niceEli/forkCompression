@@ -3,5 +3,5 @@ import { removeLastExt } from "./removeLastExt.js";
 
 export function makeDecompressedFile(finalFile, replaceFile, fileData) {
   let { filename, ext } = removeLastExt(finalFile);
-  makeCompressedFile(filename, replaceFile, fileData, ext);
+  return makeCompressedFile(filename, replaceFile, fileData, ext);
 }
