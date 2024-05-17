@@ -18,6 +18,12 @@ import fileSign from "./filesign.js";
 
 const cPr = (x) => gradule.preset.wedding_day_blues.print(x.toString());
 
+function processEncoding(gmClient, data, encoder) {
+  let bpDecode = gmClient.decode(data, process.env.debug).decodedString;
+  let brDecode = encoder.decode(UInt8E.encodeUint8(bpDecode));
+  return { bpDecode, brDecode };
+}
+
 /**
  * @param {string} file
  * @param {muint8.MUint8} encoder
@@ -57,8 +63,7 @@ export default function deCompress(
     console.log(typeof data);
   }
 
-  let bpDecode = gmClient.decode(data, process.env.debug).decodedString;
-  let brDecode = encoder.decode(UInt8E.encodeUint8(bpDecode));
+  let { bpDecode, brDecode } = processEncoding(gmClient, data, encoder);
 
   logVerification(bpDecode, cPr);
 

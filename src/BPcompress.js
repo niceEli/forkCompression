@@ -16,6 +16,15 @@ const cPr = (x) => gradule.preset.retro.print(x.toString());
 
 const EXTENSION = "fc";
 
+function processEncodings(encoder, fileData) {
+  let gmClient = makeGMClient();
+
+  let encodedStr = UInt8E.decodeUint8(encoder.encode(fileData));
+  let bpEncode = gmClient.encode(encodedStr, process.env.debug);
+  let brEncode = bpEncode.encodedString;
+  return { encodedStr, bpEncode, brEncode };
+}
+
 /**
  * @param {string} file
  * @param {muint8.MUint8} encoder
@@ -33,11 +42,7 @@ export default function BPcompress(
 ) {
   cPr(`>  ${file} -> ${file}.${EXTENSION}`);
 
-  let gmClient = makeGMClient();
-
-  let encodedStr = UInt8E.decodeUint8(encoder.encode(fileData));
-  let bpEncode = gmClient.encode(encodedStr, process.env.debug);
-  let brEncode = bpEncode.encodedString;
+  let { encodedStr, bpEncode, brEncode } = processEncodings(encoder, fileData);
 
   if (process.env.debug) {
     let decodedFile = encoder.decode(decodedLayer);
