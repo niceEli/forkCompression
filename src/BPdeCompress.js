@@ -1,5 +1,4 @@
 import { fdatasync } from "node:fs";
-import zlib from "zlib";
 
 import gradule from "gradule";
 
