@@ -9,6 +9,7 @@ import { logVerification } from "./logVerification.js";
 import { makeDecompressedFile } from "./makeDecompressedFile.js";
 import { processDecoding } from "./processEncoding.js";
 import { removeLastExt } from "./removeLastExt.js";
+import { displayFlags } from "./displayFlags.js";
 
 import fileSign from "./filesign.js";
 
@@ -37,7 +38,7 @@ export default function BPdeCompress(
 
   let flags = unsignedFile.flags;
   let data = unsignedFile.text;
-  !!flags && displayFlags(...flags);
+  !!flags && displayFlags(cPr, ...flags);
 
   let hasPassword = !!flags[0];
   let passwordUsed = !!password;

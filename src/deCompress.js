@@ -39,7 +39,7 @@ export default function deCompress(
 
   let flags = unsignedFile.flags;
   let data = unsignedFile.text;
-  !!flags && displayFlags(...flags);
+  !!flags && displayFlags(cPr, ...flags);
 
   if (password !== undefined || flags[0])
     data = Buffer.from(decrypt(data.toString(), password));
