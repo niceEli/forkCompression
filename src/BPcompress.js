@@ -6,6 +6,7 @@ import { muint8 } from "gomooe";
 
 import { logVerification } from "./logVerification.js";
 import { makeCompressedFile } from "./makeCompressedFile.js";
+import { displayFlags } from "./displayFlags.js";
 
 import { processEncoding } from "./processEncoding.js";
 
@@ -35,11 +36,13 @@ export default function BPcompress(
   let { encodedStr, bpEncode, brEncode } = processEncoding(encoder, fileData);
 
   if (process.env.debug) {
-    let decodedFile = encoder.decode(decodedLayer);
+    displayFlags(cPr, password, replaceFile, true);
 
+    let decodedFile = encoder.decode(decodedLayer);
     logVerification(encodedStr, fileData);
     logVerification(decodedFile, fileData);
 
+    console.log();
     console.log(bpEncode);
     console.log(typeof bpEncode);
     console.log(brEncode);
@@ -51,8 +54,8 @@ export default function BPcompress(
 
   let signedFile = fileSign.signToText(data, !!password, true);
 
-  makeCompressedFile(file, replaceFile, signedFile, EXTENSION);
-
-  cPr(">  Done!");
-  process.exit(0);
+  makeCompressedFile(file, replaceFile, signedFile, EXTENSION).then(() => {
+    cPr(">  Done!");
+    process.exit(0);
+  })
 }

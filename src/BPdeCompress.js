@@ -60,7 +60,7 @@ export default function BPdeCompress(
   logVerification(bpDecode, cPr);
 
   makeDecompressedFile(finalFile, replaceFile, brDecode).then(() => {
-    cPr("Done!");
+    cPr(">  Done!");
     process.exit(0);
   });
 }
