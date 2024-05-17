@@ -3,6 +3,7 @@ import { muint8 } from "gomooe";
 const { UInt8E } = muint8;
 
 // This file can be bundled as the entrypoint and shipped to the web.
+// These are the GM operations.
 
 /**
  * @param {muint8.MUint8} encoder
