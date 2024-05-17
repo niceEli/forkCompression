@@ -45,6 +45,8 @@ function doJob(file, encoder, password, replaceFile, bullpressMode) {
     let cb = !compressed ? cbSet[0] : cbSet[1];
 
     cb(file, encoder, data, password, replaceFile);
+
+    process.exit(0);
   });
 }
 
@@ -63,5 +65,10 @@ export default async function main() {
     (x) => x === "-b" || x === "--bullpress" || x === "-bp",
   );
 
-  doJob(file, encoder, password, replaceFile, bullpressMode);
+  try {
+    doJob(file, encoder, password, replaceFile, bullpressMode);
+  } catch (err) {
+    console.log(err);
+    process.exit(1);
+  }
 }

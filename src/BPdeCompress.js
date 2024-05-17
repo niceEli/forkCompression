@@ -22,7 +22,7 @@ const cPr = (x) => gradule.preset.wedding_day_blues.print(x.toString());
  *
  * @param {boolean} replaceFile
  */
-export default function deCompress(
+export default function BPdeCompress(
   file,
   encoder,
   fileData,
@@ -34,11 +34,14 @@ export default function deCompress(
   cPr(`${file} -> ${finalFile}`);
 
   let unsignedFile = fileSign.unsignText(fileData.toString());
-  console.log(unsignedFile.flags);
 
+  let flags = unsignedFile.flags;
   let data = unsignedFile.text;
-  let hasPassword = !!unsignedFile.flags[0];
+  !!flags && displayFlags(...flags);
+
+  let hasPassword = !!flags[0];
   let passwordUsed = !!password;
+
   if (!passwordUsed && hasPassword)
     throw new Error("Password is required for this file");
 
