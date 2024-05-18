@@ -8,7 +8,7 @@ const { UInt8E } = muint8;
 
 import { logVerification } from "./logVerification.js";
 import { makeCompressedFile } from "./makeCompressedFile.js";
-import { verify } from "./verify.js";
+import { displayFlags } from "./displayFlags.js";
 
 import fileSign from "./filesign.js";
 
@@ -38,21 +38,24 @@ export default function compress(
   let brEncode = /* brotli.compress */ encodedStr;
 
   if (process.env.debug) {
-    let decodedFile = encoder.decode(decodedLayer);
+    displayFlags(cPr, password, replaceFile, false);
 
+    let decodedFile = encoder.decode(encodedFile);
     logVerification(encodedStr, encodedFile);
     logVerification(decodedFile, fileData);
 
+    console.log();
     console.log(brEncode);
     console.log(typeof brEncode);
   }
 
   let data = brEncode;
   if (password !== undefined) data = encrypt(data, password);
-  
+
   let signedFile = fileSign.signToText(data, !!password, false);
 
-  makeCompressedFile(file, replaceFile, signedFile, EXTENSION);
-
-  cPr(">  Done!");
+  makeCompressedFile(file, replaceFile, signedFile, EXTENSION).then(() => {
+    cPr(">  Done!");
+    process.exit(0);
+  });
 }

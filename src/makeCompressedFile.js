@@ -10,7 +10,10 @@ export function makeCompressedFile(finalFile, replaceFile, data, ext = "fc") {
     while (fs.existsSync(lastName))
       lastName = makeName(`${finalFile} (${(dupeId += 1)})`);
 
-  fs.writeFile(lastName, data, (err) => {
-    if (err) throw err;
-  });
+  return new Promise((resolve, reject) =>
+    fs.writeFile(lastName, data, (err) => {
+      if (err) reject(err);
+      else resolve();
+    }),
+  );
 }

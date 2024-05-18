@@ -9,7 +9,7 @@
   },
   "scripts": {
     "untest": " node index.js README.md.fc -r",
-    "test": "node index.js README.md -r",
+    "test": "node index.js README.md -r -p hey",
     "testdot": "node index.js"
   },
   "author": "niceEli & SpecFORK",

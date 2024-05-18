@@ -40,8 +40,8 @@ class FileSignFlags {
    * @param {string} flagHex - Hex string containing encoded flags
    * @returns {boolean[]} - Decoded flags
    */
-  unpack(flagHex) {
-    return enc.unsignHexCharSig(flagHex);
+  unpack(flagHex, length) {
+    return enc.unsignHexCharSig(flagHex, length);
   }
 
   constructor(password, compression) {
@@ -60,12 +60,16 @@ function signToText(txt, password, compression) {
 }
 
 function unsignText(txt = "") {
-  let [text, hexVal] = txt.lastIndexOf(delim) > -1 ? txt.split(delim) : [txt];
+  let rind = txt.lastIndexOf(delim);
+  if (rind === -1) return { text: txt, flags: [] };
+
+  let hexVal = txt.slice(rind + delim.length);
+  let text = txt.slice(0, rind);
   let fsf = new FileSignFlags();
   
   /** @type {ReturnType<typeof fsf.getArr()> | undefined} */
   let flags;
-  if (hexVal) flags = fsf.unpack(hexVal);
+  if (!!hexVal) flags = fsf.unpack(hexVal, fsf.getArr().length);
   
   return { text, flags };
 }

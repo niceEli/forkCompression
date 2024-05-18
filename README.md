@@ -1,3 +1,3 @@
 # Fork Compression
 
-fork compression is a highy secure, fast, and space efficent way to compress a file or multiple with the help of a tarball
+Fork Compression is a highly secure, fast, and space-efficient way to compress a file or multiple files with the help of a tarball.
