@@ -1,8 +1,6 @@
 import { muint8 } from "gomooe";
 const { UInt8E } = muint8;
 
-import { displayFlags } from "./displayFlags.js";
-import { ccPr, dcPr } from "./cPr.js";
 import { logVerification } from "./logVerification.js";
 
 // This file can (hopefully) be shipped to web as an entrypoint.

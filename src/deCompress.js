@@ -1,9 +1,5 @@
-import { fdatasync } from "node:fs";
-// import brotli from "brotli";
-
 import { muint8 } from "gomooe";
 import { decrypt } from "node-encryption";
-const { UInt8E } = muint8;
 
 import { logVerification } from "./logVerification.js";
 import { makeDecompressedFile } from "./makeDecompressedFile.js";

@@ -1,14 +1,10 @@
 // import brotli from "brotli";
 import { encrypt } from "node-encryption";
 
-import gradule from "gradule";
-
 import { muint8 } from "gomooe";
-const { UInt8E } = muint8;
 
 import { makeCompressedFile } from "./makeCompressedFile.js";
 import { displayFlags } from "./displayFlags.js";
-
 import { fcCompress } from "./FCmethods.js";
 import { ccPr } from "./cPr.js";
 

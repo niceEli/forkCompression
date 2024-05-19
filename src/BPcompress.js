@@ -1,12 +1,9 @@
 import { encrypt } from "node-encryption";
 
-import gradule from "gradule";
-
 import { muint8 } from "gomooe";
 
 import { makeCompressedFile } from "./makeCompressedFile.js";
 import { displayFlags } from "./displayFlags.js";
-
 import { processEncoding } from "./processEncoding.js";
 
 import fileSign from "./filesign.js";
