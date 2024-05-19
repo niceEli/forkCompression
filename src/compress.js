@@ -6,13 +6,13 @@ import gradule from "gradule";
 import { muint8 } from "gomooe";
 const { UInt8E } = muint8;
 
-import { logVerification } from "./logVerification.js";
 import { makeCompressedFile } from "./makeCompressedFile.js";
 import { displayFlags } from "./displayFlags.js";
 
-import fileSign from "./filesign.js";
+import { fcCompress } from "./FCmethods.js";
+import { ccPr } from "./cPr.js";
 
-const cPr = (x) => gradule.preset.retro.print(x.toString());
+import fileSign from "./filesign.js";
 
 const EXTENSION = "fc";
 
@@ -31,23 +31,10 @@ export default function compress(
   password,
   replaceFile,
 ) {
-  cPr(`>  ${file} -> ${file}.${EXTENSION}`);
+  ccPr(`>  ${file} -> ${file}.${EXTENSION}`);
 
-  let encodedFile = encoder.encode(fileData, -1);
-  let encodedStr = UInt8E.decodeUint8(encodedFile);
-  let brEncode = /* brotli.compress */ encodedStr;
-
-  if (process.env.debug) {
-    displayFlags(cPr, password, replaceFile, false);
-
-    let decodedFile = encoder.decode(encodedFile);
-    logVerification(encodedStr, encodedFile);
-    logVerification(decodedFile, fileData);
-
-    console.log();
-    console.log(brEncode);
-    console.log(typeof brEncode);
-  }
+  let brEncode = fcCompress(encoder, fileData);
+  if (process.env.debug) displayFlags(ccPr, password, replaceFile, false);
 
   let data = brEncode;
   if (password !== undefined) data = encrypt(data, password);
@@ -55,7 +42,7 @@ export default function compress(
   let signedFile = fileSign.signToText(data, !!password, false);
 
   makeCompressedFile(file, replaceFile, signedFile, EXTENSION).then(() => {
-    cPr(">  Done!");
+    ccPr(">  Done!");
     process.exit(0);
   });
 }

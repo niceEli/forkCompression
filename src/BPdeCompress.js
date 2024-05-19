@@ -13,8 +13,6 @@ import { displayFlags } from "./displayFlags.js";
 
 import fileSign from "./filesign.js";
 
-const cPr = (x) => gradule.preset.wedding_day_blues.print(x.toString());
-
 /**
  * @param {string} file
  * @param {muint8.MUint8} encoder
