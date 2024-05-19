@@ -1,20 +1,16 @@
-import { fdatasync } from "node:fs";
-// import brotli from "brotli";
-
-import gradule from "gradule";
-
 import { muint8 } from "gomooe";
 import { decrypt } from "node-encryption";
-const { UInt8E } = muint8;
 
 import { logVerification } from "./logVerification.js";
 import { makeDecompressedFile } from "./makeDecompressedFile.js";
 import { removeLastExt } from "./removeLastExt.js";
 
 import { displayFlags } from "./displayFlags.js";
-import fileSign from "./filesign.js";
 
-export const cPr = (x) => gradule.preset.wedding_day_blues.print(x.toString());
+import { fcDecompress } from "./FCmethods.js";
+import { dcPr } from "./cPr.js";
+
+import fileSign from "./filesign.js";
 
 /**
  * @param {string} file
@@ -33,30 +29,23 @@ export default function deCompress(
 ) {
   let finalFile = removeLastExt(file).filename;
 
-  cPr(`${file} -> ${finalFile}`);
+  dcPr(`${file} -> ${finalFile}`);
 
   let unsignedFile = fileSign.unsignText(fileData.toString());
 
   let flags = unsignedFile.flags;
   let data = unsignedFile.text;
-  !!flags && displayFlags(cPr, ...flags);
+  !!flags && displayFlags(dcPr, ...flags);
 
   if (password !== undefined || flags[0])
     data = Buffer.from(decrypt(data.toString(), password));
 
-  if (process.env.debug) {
-    console.log(data.toString());
-    console.log(typeof data);
-  }
+  let unEncodedFile = fcDecompress(encoder, data);
 
-  let brDecode = /* brotli.decompress */ data;
-  let unEncodedStr = UInt8E.encodeUint8(brDecode);
-  let unEncodedFile = encoder.decode(unEncodedStr);
-
-  logVerification(unEncodedStr, cPr);
+  logVerification(unEncodedStr, dcPr);
 
   makeDecompressedFile(finalFile, replaceFile, unEncodedFile).then(() => {
-    cPr(">  Done!");
+    dcPr(">  Done!");
     process.exit(0);
   });
 }

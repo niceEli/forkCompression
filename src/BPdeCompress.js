@@ -1,7 +1,3 @@
-import { fdatasync } from "node:fs";
-
-import gradule from "gradule";
-
 import { muint8 } from "gomooe";
 import { decrypt } from "node-encryption";
 
@@ -12,8 +8,6 @@ import { removeLastExt } from "./removeLastExt.js";
 import { displayFlags } from "./displayFlags.js";
 
 import fileSign from "./filesign.js";
-
-const cPr = (x) => gradule.preset.wedding_day_blues.print(x.toString());
 
 /**
  * @param {string} file

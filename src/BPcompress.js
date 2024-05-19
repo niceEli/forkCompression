@@ -1,18 +1,12 @@
 import { encrypt } from "node-encryption";
 
-import gradule from "gradule";
-
 import { muint8 } from "gomooe";
 
-import { logVerification } from "./logVerification.js";
 import { makeCompressedFile } from "./makeCompressedFile.js";
 import { displayFlags } from "./displayFlags.js";
-
 import { processEncoding } from "./processEncoding.js";
 
 import fileSign from "./filesign.js";
-
-const cPr = (x) => gradule.preset.retro.print(x.toString());
 
 const EXTENSION = "fc";
 
@@ -37,10 +31,6 @@ export default function BPcompress(
 
   if (process.env.debug) {
     displayFlags(cPr, password, replaceFile, true);
-
-    let decodedFile = encoder.decode(decodedLayer);
-    logVerification(encodedStr, fileData);
-    logVerification(decodedFile, fileData);
 
     console.log();
     console.log(bpEncode);
