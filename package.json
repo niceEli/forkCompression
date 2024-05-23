@@ -8,8 +8,8 @@
     "forc": "index.js"
   },
   "scripts": {
-    "untest": " node index.js README.md.fc -r",
-    "test": "node index.js README.md -r -p hey",
+    "untest": " node index.js testFile.fc -r",
+    "test": "node index.js testFile -r -p hey",
     "testdot": "node index.js"
   },
   "author": "niceEli & SpecFORK",
