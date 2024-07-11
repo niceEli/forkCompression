@@ -7,6 +7,7 @@ import { displayFlags } from "./displayFlags.js";
 import { processEncoding } from "./processEncoding.js";
 
 import fileSign from "./filesign.js";
+import { ccPr } from "./cPr.js";
 
 const EXTENSION = "fc";
 
@@ -25,12 +26,12 @@ export default function BPcompress(
   password,
   replaceFile,
 ) {
-  cPr(`>  ${file} -> ${file}.${EXTENSION}`);
+  ccPr(`>  ${file} -> ${file}.${EXTENSION}`);
 
   let { encodedStr, bpEncode, brEncode } = processEncoding(encoder, fileData);
 
   if (process.env.debug) {
-    displayFlags(cPr, password, replaceFile, true);
+    displayFlags(ccPr, password, replaceFile, true);
 
     console.log();
     console.log(bpEncode);
@@ -45,7 +46,7 @@ export default function BPcompress(
   let signedFile = fileSign.signToText(data, !!password, true);
 
   makeCompressedFile(file, replaceFile, signedFile, EXTENSION).then(() => {
-    cPr(">  Done!");
+    ccPr(">  Done!");
     process.exit(0);
-  })
+  });
 }

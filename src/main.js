@@ -64,7 +64,7 @@ export default async function main() {
   const bullpressMode = findInArgs(
     (x) => x === "-b" || x === "--bullpress" || x === "-bp",
   );
-
+  
   try {
     doJob(file, encoder, password, replaceFile, bullpressMode);
   } catch (err) {
