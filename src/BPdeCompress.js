@@ -8,6 +8,7 @@ import { removeLastExt } from "./removeLastExt.js";
 import { displayFlags } from "./displayFlags.js";
 
 import fileSign from "./filesign.js";
+import { dcPr } from "./cPr.js";
 
 /**
  * @param {string} file
@@ -26,13 +27,13 @@ export default function BPdeCompress(
 ) {
   let finalFile = removeLastExt(file).filename;
 
-  cPr(`${file} -> ${finalFile}`);
+  dcPr(`${file} -> ${finalFile}`);
 
   let unsignedFile = fileSign.unsignText(fileData.toString());
 
   let flags = unsignedFile.flags;
   let data = unsignedFile.text;
-  !!flags && displayFlags(cPr, ...flags);
+  !!flags && displayFlags(dcPr, ...flags);
 
   let hasPassword = !!flags[0];
   let passwordUsed = !!password;
@@ -51,10 +52,10 @@ export default function BPdeCompress(
 
   let { gmClient, bpDecode, brDecode } = processDecoding(encoder, data);
 
-  logVerification(bpDecode, cPr);
+  logVerification(bpDecode, dcPr);
 
   makeDecompressedFile(finalFile, replaceFile, brDecode).then(() => {
-    cPr(">  Done!");
+    dcPr(">  Done!");
     process.exit(0);
   });
 }
