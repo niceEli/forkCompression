@@ -1,6 +1,4 @@
 export const getArgSet = (x) => {
-  var pos = 0,
-    key = "";
-  while (key !== x) if ((key = process.argv[(pos += 1)] === undefined)) return;
-  return process.argv[pos];
+  let i = process.argv.indexOf(x);
+  return i !== -1 ? process.argv[i + 1] : undefined
 };
