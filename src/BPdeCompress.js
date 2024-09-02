@@ -52,7 +52,7 @@ export default function BPdeCompress(
 
   let { gmClient, bpDecode, brDecode } = processDecoding(encoder, data);
 
-  logVerification(bpDecode, dcPr);
+  logVerification(brDecode, dcPr);
 
   makeDecompressedFile(finalFile, replaceFile, brDecode).then(() => {
     dcPr(">  Done!");

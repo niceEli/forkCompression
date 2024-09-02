@@ -33,7 +33,7 @@ export default function compress(
   if (process.env.debug) displayFlags(ccPr, password, replaceFile, false);
 
   let data = brEncode;
-  if (password !== undefined) data = encrypt(data, password);
+  if (password) data = encrypt(data, password);
 
   let signedFile = fileSign.signToText(data, !!password, false);
 
